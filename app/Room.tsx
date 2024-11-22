@@ -1,24 +1,26 @@
 "use client";
 
-import { ReactNode } from "react";
-import {
-  LiveblocksProvider,
-  RoomProvider,
-  ClientSideSuspense,
-} from "@liveblocks/react/suspense";
+import { ReactNode, useMemo } from "react";
+import { ClientSideSuspense, RoomProvider } from "@liveblocks/react/suspense";
+import { useSearchParams } from "next/navigation";
+import Loading from "@/components/Loading";
+
+function useExampleRoomId(roomId: string) {
+  const params = useSearchParams();
+  const exampleId = params?.get("roomId");
+
+  const exampleRoomId = useMemo(() => {
+    return exampleId ? `${roomId}-${exampleId}` : roomId;
+  }, [roomId, exampleId]);
+  return exampleRoomId;
+}
 
 export function Room({ children }: { children: ReactNode }) {
+  const roomId = useExampleRoomId("liveblocks:examples:nextjs-yjs-blocknote");
+
   return (
-    <LiveblocksProvider
-      publicApiKey={
-        "pk_prod_bHdTRpynG8_qbGBK93gG77BkY4NTecsQD_NTrz0bE3Z5UxPqEmZBbmPqZnUsItbu"
-      }
-    >
-      <RoomProvider id="my-room">
-        <ClientSideSuspense fallback={<div>Loading…</div>}>
-          {children}
-        </ClientSideSuspense>
-      </RoomProvider>
-    </LiveblocksProvider>
+    <RoomProvider id={roomId} initialPresence={{ cursor: null }}>
+      <ClientSideSuspense fallback={<Loading />}>{children}</ClientSideSuspense>
+    </RoomProvider>
   );
 }
