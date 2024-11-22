@@ -16,6 +16,7 @@ export default function LoginPage() {
     const formData = new FormData(e.currentTarget);
     try {
       await login(formData);
+      //   redirect("/");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setError(error.message || "An unexpected error occured.");
@@ -90,6 +91,7 @@ export default function LoginPage() {
             <span className="text-sm text-gray-600">
               Don&apos;t have an account?{" "}
             </span>
+            {/* TODO: don't forget to proceed the same as login */}
             <button
               formAction={signup}
               className="w-full py-2 text-blue-500 border border-blue-400 bg-white rounded-md hover:bg-blue-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
